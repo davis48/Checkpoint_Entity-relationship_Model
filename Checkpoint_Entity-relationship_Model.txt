@@ -1,0 +1,53 @@
+CREATE TABLE Gym (
+  Gym_ID      NUMBER        PRIMARY KEY,
+  Name        VARCHAR2(100) NOT NULL,
+  Address     VARCHAR2(200),
+  Phone       VARCHAR2(20)
+);
+
+CREATE TABLE Member (
+  Member_ID       NUMBER          PRIMARY KEY,
+  Last_Name       VARCHAR2(50),
+  First_Name      VARCHAR2(50),
+  Address         VARCHAR2(200),
+  Date_of_Birth   DATE,
+  Gender          CHAR(1),
+  Gym_ID          NUMBER,
+  FOREIGN KEY (Gym_ID) REFERENCES Gym(Gym_ID)
+);
+
+CREATE TABLE Coach (
+  Coach_ID   NUMBER         PRIMARY KEY,
+  Last_Name  VARCHAR2(50),
+  First_Name VARCHAR2(50),
+  Age        NUMBER,
+  Specialty  VARCHAR2(50)
+);
+
+CREATE TABLE Session (
+  Session_ID    NUMBER          PRIMARY KEY,
+  Type_of_Sport VARCHAR2(50),
+  Schedule      VARCHAR2(50),  -- or DATE/TIME type, depending on your design
+  Gym_ID        NUMBER,
+  FOREIGN KEY (Gym_ID) REFERENCES Gym(Gym_ID)
+);
+
+-- Many-to-Many between Member and Session
+CREATE TABLE Registers (
+  Member_ID  NUMBER,
+  Session_ID NUMBER,
+  PRIMARY KEY (Member_ID, Session_ID),
+  FOREIGN KEY (Member_ID) REFERENCES Member(Member_ID),
+  FOREIGN KEY (Session_ID) REFERENCES Session(Session_ID)
+  -- Additional logic or triggers to ensure max 20 per session
+);
+
+-- Many-to-Many between Coach and Session
+CREATE TABLE Leads (
+  Coach_ID   NUMBER,
+  Session_ID NUMBER,
+  PRIMARY KEY (Coach_ID, Session_ID),
+  FOREIGN KEY (Coach_ID) REFERENCES Coach(Coach_ID),
+  FOREIGN KEY (Session_ID) REFERENCES Session(Session_ID)
+  -- Additional logic or triggers to ensure max 2 coaches per session
+);
